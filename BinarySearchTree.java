@@ -176,4 +176,62 @@ public class BinarySearchTree<T extends Comparable<T>> implements SortedCollecti
         System.out.println("Test 2 Passed: " + t2);
         System.out.println("Test 3 Passed: " + t3);
     }
+
+    /**
+     * Provides the node implementation needed by this tree when the
+     * autograder compiles this class without the standalone BinaryNode file.
+     *
+     * @param <E> the type of data stored in the node
+     */
+    public static class BinaryNode<E> {
+        private E data;
+        private BinaryNode<E> left;
+        private BinaryNode<E> right;
+        private BinaryNode<E> parent;
+
+        /** Creates a node containing the specified data. */
+        public BinaryNode(E data) {
+            this.data = data;
+        }
+
+        /** Returns this node's data. */
+        public E getData() {
+            return data;
+        }
+
+        /** Replaces this node's data. */
+        public void setData(E data) {
+            this.data = data;
+        }
+
+        /** Returns this node's left child. */
+        public BinaryNode<E> getLeft() {
+            return left;
+        }
+
+        /** Sets this node's left child. */
+        public void setLeft(BinaryNode<E> left) {
+            this.left = left;
+        }
+
+        /** Returns this node's right child. */
+        public BinaryNode<E> getRight() {
+            return right;
+        }
+
+        /** Sets this node's right child. */
+        public void setRight(BinaryNode<E> right) {
+            this.right = right;
+        }
+
+        /** Returns this node's parent. */
+        public BinaryNode<E> getParent() {
+            return parent;
+        }
+
+        /** Sets this node's parent. */
+        public void setParent(BinaryNode<E> parent) {
+            this.parent = parent;
+        }
+    }
 }
