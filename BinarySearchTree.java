@@ -122,18 +122,20 @@ public class BinarySearchTree<T extends Comparable<T>> implements SortedCollecti
      */
     public boolean test1() {
         BinarySearchTree<Integer> bst = new BinarySearchTree<>();
-        bst.add(5);
-        bst.add(3);
-        bst.add(7);
-        bst.add(1);
-        bst.add(4);
+         bst.add(8);
+         bst.add(4);
+         bst.add(12);
+         bst.add(2);
+         bst.add(6);
+         bst.add(10);
+         bst.add(14);
 
-        // Check size, root value, and leaf/interior lookup via contains
-        return bst.size() == 5 &&
-               bst.contains(5) &&
-               bst.contains(3) &&
-               bst.contains(1) &&
-               !bst.contains(9);
+         return bst.size() == 7 &&
+             bst.contains(8) &&
+             bst.contains(4) &&
+             bst.contains(2) &&
+             bst.contains(14) &&
+             !bst.contains(9);
     }
 
     /**
@@ -142,14 +144,19 @@ public class BinarySearchTree<T extends Comparable<T>> implements SortedCollecti
      */
     public boolean test2() {
         BinarySearchTree<String> bst = new BinarySearchTree<>();
-        bst.add("Banana");
-        bst.add("Apple");
-        bst.add("Cherry");
+         bst.add("Mango");
+         bst.add("Apple");
+         bst.add("Peach");
+         bst.add("Banana");
+         bst.add("Orange");
+         bst.add("Pear");
 
-        return bst.size() == 3 &&
-               bst.contains("Apple") &&
-               bst.contains("Banana") &&
-               bst.contains("Cherry");
+         return bst.size() == 6 &&
+             bst.contains("Mango") &&
+             bst.contains("Apple") &&
+             bst.contains("Banana") &&
+             bst.contains("Pear") &&
+             !bst.contains("Cherry");
     }
 
     /**
@@ -158,9 +165,15 @@ public class BinarySearchTree<T extends Comparable<T>> implements SortedCollecti
      */
     public boolean test3() {
         BinarySearchTree<Integer> bst = new BinarySearchTree<>();
-        bst.add(10);
         bst.add(20);
-        if (!bst.isEmpty() && bst.size() != 2) return false;
+        bst.add(10);
+        bst.add(30);
+        bst.add(5);
+        bst.add(15);
+        bst.add(25);
+        bst.add(35);
+        if (bst.isEmpty() || bst.size() != 7) return false;
+        if (!bst.contains(20) || !bst.contains(5) || !bst.contains(35)) return false;
 
         bst.clear();
         return bst.isEmpty() && bst.size() == 0;
