@@ -19,6 +19,9 @@ public class BinaryNode<T> {
      */
     public BinaryNode(T data) {
         this.data = data;
+        this.left = null;
+        this.right = null;
+        this.parent = null;
     }
 
     /**
