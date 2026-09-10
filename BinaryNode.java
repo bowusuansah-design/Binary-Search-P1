@@ -5,13 +5,13 @@
  */
 public class BinaryNode<T> {
     /** The value stored in this node. */
-    private T data;
+    T data;
     /** The left child of this node, or null when there is no left child. */
-    private BinaryNode<T> left;
+    BinaryNode<T> left;
     /** The right child of this node, or null when there is no right child. */
-    private BinaryNode<T> right;
+    BinaryNode<T> right;
     /** The parent of this node, or null when this node is the root. */
-    private BinaryNode<T> parent;
+    BinaryNode<T> parent;
 
     /**
      * Creates a node containing the specified value.
