@@ -62,20 +62,20 @@ public class BinarySearchTree<T extends Comparable<T>> implements SortedCollecti
             return;
         }
 
-        int compare = newNode.getData().compareTo(subtree.getData());
+        int compare = newNode.data.compareTo(subtree.data);
         if (compare <= 0) {
-            if (subtree.getLeft() == null) {
-                subtree.setLeft(newNode);
-                newNode.setParent(subtree);
+            if (subtree.left == null) {
+                subtree.left = newNode;
+                newNode.parent = subtree;
             } else {
-                addHelper(newNode, subtree.getLeft());
+                addHelper(newNode, subtree.left);
             }
         } else {
-            if (subtree.getRight() == null) {
-                subtree.setRight(newNode);
-                newNode.setParent(subtree);
+            if (subtree.right == null) {
+                subtree.right = newNode;
+                newNode.parent = subtree;
             } else {
-                addHelper(newNode, subtree.getRight());
+                addHelper(newNode, subtree.right);
             }
         }
     }
@@ -93,13 +93,13 @@ public class BinarySearchTree<T extends Comparable<T>> implements SortedCollecti
     protected boolean containsHelper(Comparable<T> find, BinaryNode<T> subtree) {
         if (subtree == null) return false;
 
-        int compare = find.compareTo(subtree.getData());
+        int compare = find.compareTo(subtree.data);
         if (compare == 0) {
             return true;
         } else if (compare < 0) {
-            return containsHelper(find, subtree.getLeft());
+            return containsHelper(find, subtree.left);
         } else {
-            return containsHelper(find, subtree.getRight());
+            return containsHelper(find, subtree.right);
         }
     }
 
@@ -113,7 +113,7 @@ public class BinarySearchTree<T extends Comparable<T>> implements SortedCollecti
 
     protected int sizeHelper(BinaryNode<T> subtree) {
         if (subtree == null) return 0;
-        return 1 + sizeHelper(subtree.getLeft()) + sizeHelper(subtree.getRight());
+        return 1 + sizeHelper(subtree.left) + sizeHelper(subtree.right);
     }
 
     /**
