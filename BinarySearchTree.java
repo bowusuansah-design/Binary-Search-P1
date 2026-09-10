@@ -1,3 +1,6 @@
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 // Bright Owusu-Ansah
 // Binary Search Tree Implementation
 // Professor: Mr. Florian
@@ -62,20 +65,20 @@ public class BinarySearchTree<T extends Comparable<T>> implements SortedCollecti
             return;
         }
 
-        int compare = newNode.data.compareTo(subtree.data);
+        int compare = nodeData(newNode).compareTo(nodeData(subtree));
         if (compare <= 0) {
-            if (subtree.left == null) {
-                subtree.left = newNode;
-                newNode.parent = subtree;
+            if (nodeLeft(subtree) == null) {
+                setNodeLeft(subtree, newNode);
+                setNodeParent(newNode, subtree);
             } else {
-                addHelper(newNode, subtree.left);
+                addHelper(newNode, nodeLeft(subtree));
             }
         } else {
-            if (subtree.right == null) {
-                subtree.right = newNode;
-                newNode.parent = subtree;
+            if (nodeRight(subtree) == null) {
+                setNodeRight(subtree, newNode);
+                setNodeParent(newNode, subtree);
             } else {
-                addHelper(newNode, subtree.right);
+                addHelper(newNode, nodeRight(subtree));
             }
         }
     }
@@ -93,13 +96,13 @@ public class BinarySearchTree<T extends Comparable<T>> implements SortedCollecti
     protected boolean containsHelper(Comparable<T> find, BinaryNode<T> subtree) {
         if (subtree == null) return false;
 
-        int compare = find.compareTo(subtree.data);
+        int compare = find.compareTo(nodeData(subtree));
         if (compare == 0) {
             return true;
         } else if (compare < 0) {
-            return containsHelper(find, subtree.left);
+            return containsHelper(find, nodeLeft(subtree));
         } else {
-            return containsHelper(find, subtree.right);
+            return containsHelper(find, nodeRight(subtree));
         }
     }
 
@@ -113,7 +116,95 @@ public class BinarySearchTree<T extends Comparable<T>> implements SortedCollecti
 
     protected int sizeHelper(BinaryNode<T> subtree) {
         if (subtree == null) return 0;
-        return 1 + sizeHelper(subtree.left) + sizeHelper(subtree.right);
+        return 1 + sizeHelper(nodeLeft(subtree)) + sizeHelper(nodeRight(subtree));
+    }
+
+    /** Reads a node value from either its getter or its data field. */
+    @SuppressWarnings("unchecked")
+    protected T nodeData(BinaryNode<T> node) {
+        return (T) readNodeMember(node, "getData", "data");
+    }
+
+    /** Reads a node's left child from either its getter or its left field. */
+    protected BinaryNode<T> nodeLeft(BinaryNode<T> node) {
+        return (BinaryNode<T>) readNodeMember(node, "getLeft", "left");
+    }
+
+    /** Reads a node's right child from either its getter or its right field. */
+    protected BinaryNode<T> nodeRight(BinaryNode<T> node) {
+        return (BinaryNode<T>) readNodeMember(node, "getRight", "right");
+    }
+
+    /** Sets a node's left child through its setter or left field. */
+    protected void setNodeLeft(BinaryNode<T> node, BinaryNode<T> child) {
+        writeNodeMember(node, child, "setLeft", "left");
+    }
+
+    /** Sets a node's right child through its setter or right field. */
+    protected void setNodeRight(BinaryNode<T> node, BinaryNode<T> child) {
+        writeNodeMember(node, child, "setRight", "right");
+    }
+
+    /** Sets a node's parent through its setter or parent field. */
+    protected void setNodeParent(BinaryNode<T> node, BinaryNode<T> parent) {
+        writeNodeMember(node, parent, "setParent", "parent");
+    }
+
+    protected Object readNodeMember(BinaryNode<T> node, String methodName, String fieldName) {
+        try {
+            Method method = findMethod(node.getClass(), methodName);
+            if (method != null) {
+                method.setAccessible(true);
+                return method.invoke(node);
+            }
+            Field field = findField(node.getClass(), fieldName);
+            field.setAccessible(true);
+            return field.get(node);
+        } catch (ReflectiveOperationException exception) {
+            throw new IllegalStateException("Unable to read BinaryNode member", exception);
+        }
+    }
+
+    protected void writeNodeMember(BinaryNode<T> node, BinaryNode<T> value,
+                                   String methodName, String fieldName) {
+        try {
+            Method method = findMethod(node.getClass(), methodName);
+            if (method != null) {
+                method.setAccessible(true);
+                method.invoke(node, value);
+                return;
+            }
+            Field field = findField(node.getClass(), fieldName);
+            field.setAccessible(true);
+            field.set(node, value);
+        } catch (ReflectiveOperationException exception) {
+            throw new IllegalStateException("Unable to write BinaryNode member", exception);
+        }
+    }
+
+    protected Method findMethod(Class<?> nodeClass, String methodName) {
+        for (Class<?> current = nodeClass; current != null; current = current.getSuperclass()) {
+            for (Method method : current.getDeclaredMethods()) {
+                if (method.getName().equals(methodName) && method.getParameterCount() == 0) {
+                    return method;
+                }
+                if (method.getName().equals(methodName) && method.getParameterCount() == 1) {
+                    return method;
+                }
+            }
+        }
+        return null;
+    }
+
+    protected Field findField(Class<?> nodeClass, String fieldName) {
+        for (Class<?> current = nodeClass; current != null; current = current.getSuperclass()) {
+            try {
+                return current.getDeclaredField(fieldName);
+            } catch (NoSuchFieldException ignored) {
+                // Continue searching parent classes.
+            }
+        }
+        throw new IllegalStateException("BinaryNode member not found: " + fieldName);
     }
 
     /**
